@@ -1,5 +1,7 @@
 package br.com.zupacademy.mateus.Propostas.proposta;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ public class PropostaController {
 	 * @return ResponseEntity representando o status HTTP 201, 400 ou 500.
 	 */
 	@PostMapping
-	public ResponseEntity<Void> cadastra(@RequestBody NovaPropostaRequest request){
+	public ResponseEntity<Void> cadastra(@RequestBody @Valid NovaPropostaRequest request){
 		System.out.println(request.toString());
 		return ResponseEntity.noContent().build();
 	} 

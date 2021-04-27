@@ -2,6 +2,11 @@ package br.com.zupacademy.mateus.Propostas.proposta;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 /**
  * 
  * Classe modelo que representa os dados de uma proposta enviados em uma request de cadastro.
@@ -11,9 +16,13 @@ import java.math.BigDecimal;
 public class NovaPropostaRequest {
 
 	private String documento;
+	@Email
 	private String email;
+	@NotBlank
 	private String nome;
+	@NotBlank
 	private String endereco;
+	@NotNull @Positive
 	private BigDecimal salario;
 
 	/**
@@ -25,7 +34,8 @@ public class NovaPropostaRequest {
 	 * @param endereco endereço do cadastrante, não pode estar vazio;
 	 * @param salario salario do cadastrante, tem que ser um valor positivo.
 	 */
-	public NovaPropostaRequest(String documento, String email, String nome, String endereco, BigDecimal salario) {
+	public NovaPropostaRequest(String documento, @Email String email, @NotBlank String nome, @NotBlank String endereco,
+			@NotNull @Positive BigDecimal salario) {
 		this.documento = documento;
 		this.email = email;
 		this.nome = nome;
