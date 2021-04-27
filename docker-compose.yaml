@@ -1,0 +1,31 @@
+version: '3'
+services:
+
+  proposta:
+    image: 'mateusasoares/proposta:latest'
+    ports: 
+      - '8080:8080'
+    networks:
+      - proposta_network
+    depends_on :
+      - database
+    environment:
+      PROPOSTA_ACTIVE_PROFILE: prod
+      PROPOSTA_DATABASE_URL: jdbc:postgresql://database:5432/proposta_db
+      PROPOSTA_DATABASE_USERNAME: postgres
+      PROPOSTA_DATABASE_PASSWORD: postgres132
+
+  database:
+    image: 'postgres:alpine'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres132
+      POSTGRES_DB: proposta_db
+      POSTGRES_HOST: database
+    networks:
+      - proposta_network
+    
+networks:
+  proposta_network:
