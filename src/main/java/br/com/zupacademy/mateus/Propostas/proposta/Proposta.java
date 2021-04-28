@@ -45,6 +45,10 @@ public class Proposta {
 	@NotNull @Positive
 	@Column(nullable = false)
 	private BigDecimal salario;
+	
+	@Deprecated
+	public Proposta() {
+	}
 
 	/**
 	 * Construtor que instância e popula um objeto {@link Proposta} com os dados representativos da entidade proposta.
@@ -62,5 +66,29 @@ public class Proposta {
 		this.nome = nome;
 		this.endereco = endereco;
 		this.salario = salario;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public String getDocumento() {
+		return documento;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public BigDecimal getSalario() {
+		return salario;
 	}
 }

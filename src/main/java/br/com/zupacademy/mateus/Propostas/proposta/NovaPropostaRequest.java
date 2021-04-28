@@ -19,7 +19,7 @@ public class NovaPropostaRequest {
 
 	@NotBlank @CpfCnpjFormat
 	private String documento;
-	@Email
+	@NotBlank @Email
 	private String email;
 	@NotBlank
 	private String nome;
