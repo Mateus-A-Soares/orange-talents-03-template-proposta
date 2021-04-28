@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import br.com.zupacademy.mateus.Propostas.shared.validation.ApiErrorException;
+import br.com.zupacademy.mateus.Propostas.shared.validation.response.ErrorMessageItem;
 
 /**
  * 
@@ -42,6 +46,9 @@ public class PropostaController {
 	@Transactional
 	public ResponseEntity<Void> cadastra(@RequestBody @Valid NovaPropostaRequest request) {
 		Proposta proposta = request.toModel();
+		Optional<Proposta> propostaMesmoDocumento = repository.findByDocumento(proposta.getDocumento());
+		if(propostaMesmoDocumento.isPresent())
+			throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorMessageItem("documento", "documento já cadastrado"));
 		repository.save(proposta);
 		URI novaPropostaUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(proposta.getId()).toUri();

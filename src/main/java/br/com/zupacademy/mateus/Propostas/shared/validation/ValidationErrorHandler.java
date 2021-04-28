@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -35,6 +36,21 @@ public class ValidationErrorHandler {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	/** 
+	 *  Invocado ocorre quando uma {@link ApiErrorException} é lançada durante a execução do end point relativo a URL da request,
+	 * formula um {@link ResponseEntity} com o status passado na exception e popula o corpo com um {@link ErrorMessageResponse}.
+	 * 
+	 * @param exception	exception lançada pela aplicação que deve representar um erro ocorrido durante a execução de um end point;
+	 * @param request	representação da request da qual vai ser tirada o caminho que o usuário acessou;
+	 * @return {@link ResponseEntity} representando a resposta da API para a requisição.
+	 */
+	@ExceptionHandler(ApiErrorException.class)
+	public ResponseEntity<ErrorMessageResponse> handleApiError(ApiErrorException exception, WebRequest request) {
+		String path = ((ServletWebRequest) request).getRequest().getRequestURI().toString();
+		ErrorMessageResponse body = new ErrorMessageResponse(exception.getHttpStatus(), path, exception.getErrorMessageItem());
+		return ResponseEntity.status(exception.getHttpStatus()).body(body);
+	}
 
 	/**
 	 *  Invocado quando qualquer exception do tipo {@link BindException} for lançada,
