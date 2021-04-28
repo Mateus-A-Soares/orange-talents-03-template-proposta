@@ -2,6 +2,11 @@ package br.com.zupacademy.mateus.Propostas.proposta;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,25 +16,38 @@ import br.com.zupacademy.mateus.Propostas.shared.validation.constraint.CpfCnpjFo
 
 /**
  * 
- * Classe modelo que representa os dados de uma proposta enviados em uma request de cadastro.
+ * Classe modelo que representa os dados da entidade proposta.
  * 
  * @author Mateus Soares
  */
-public class NovaPropostaRequest {
+@Entity
+public class Proposta {
+	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@NotBlank @CpfCnpjFormat
+	@Column(nullable = false)
 	private String documento;
+	
 	@Email
+	@Column(nullable = false)
 	private String email;
+	
 	@NotBlank
+	@Column(nullable = false)
 	private String nome;
+	
 	@NotBlank
+	@Column(nullable = false)
 	private String endereco;
+	
 	@NotNull @Positive
+	@Column(nullable = false)
 	private BigDecimal salario;
 
 	/**
-	 * Construtor que instância e popula um objeto {@link NovaPropostaRequest} com os dados representativos de uma proposta a ser cadastrada.
+	 * Construtor que instância e popula um objeto {@link Proposta} com os dados representativos da entidade proposta.
 	 * 
 	 * @param documento cpf ou cnpj da entidade cadastrante, não pode estar vazia e deve estar formatada corretamente;
 	 * @param email email do cadastrante, não pode estar vazia e deve estar formatada corretamente;
@@ -37,16 +55,12 @@ public class NovaPropostaRequest {
 	 * @param endereco endereço do cadastrante, não pode estar vazio;
 	 * @param salario salario do cadastrante, tem que ser um valor positivo.
 	 */
-	public NovaPropostaRequest(String documento, @Email String email, @NotBlank String nome, @NotBlank String endereco,
+	public Proposta(String documento, @Email String email, @NotBlank String nome, @NotBlank String endereco,
 			@NotNull @Positive BigDecimal salario) {
 		this.documento = documento;
 		this.email = email;
 		this.nome = nome;
 		this.endereco = endereco;
 		this.salario = salario;
-	}
-
-	public Proposta toModel() {
-		return new Proposta(documento, email, nome, endereco, salario);
 	}
 }

@@ -26,7 +26,6 @@ public class PropostaController {
 	 */
 	@PostMapping
 	public ResponseEntity<Void> cadastra(@RequestBody @Valid NovaPropostaRequest request){
-		System.out.println(request.toString());
 		return ResponseEntity.noContent().build();
 	} 
 }
