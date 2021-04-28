@@ -27,7 +27,7 @@ public class Proposta {
 	private Long id;
 
 	@NotBlank @CpfCnpjFormat
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String documento;
 	
 	@Email
@@ -59,9 +59,9 @@ public class Proposta {
 	 * @param endereco endereço do cadastrante, não pode estar vazio;
 	 * @param salario salario do cadastrante, tem que ser um valor positivo.
 	 */
-	public Proposta(String documento, @Email String email, @NotBlank String nome, @NotBlank String endereco,
+	public Proposta(PropostaDocumento documento, @Email String email, @NotBlank String nome, @NotBlank String endereco,
 			@NotNull @Positive BigDecimal salario) {
-		this.documento = documento;
+		this.documento = documento.getDocumento();
 		this.email = email;
 		this.nome = nome;
 		this.endereco = endereco;
