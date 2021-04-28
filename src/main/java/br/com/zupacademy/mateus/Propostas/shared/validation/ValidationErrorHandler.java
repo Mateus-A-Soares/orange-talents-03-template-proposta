@@ -72,6 +72,22 @@ public class ValidationErrorHandler {
 	}
 	
 	/**
+	 *  Invocado quando a implementação ativa do {@link HttpMessageConverter} não consegue ler o corpo da requisição enviada para algum end point da aplicação,
+	 * popula um {@link ErrorMessageResponse} para ser serializado como resposta para o usuário final.
+	 * 
+	 * @param request	representação da request da qual vai ser tirada o caminho que o usuário acessou;
+	 * @return {@link ErrorMessageResponse} populado com o erro 400 e URI da request para ser serializado como resposta.
+	 */
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ErrorMessageResponse handleUnprocessableEntity(WebRequest request) {
+		String errorMessage = messageSource.getMessage("BadRequest", null, "400 Bad Request", null);
+		String path = ((ServletWebRequest) request).getRequest().getRequestURI().toString();
+		ErrorMessageItem error = new ErrorMessageItem("request body", errorMessage);
+		return new ErrorMessageResponse(HttpStatus.BAD_REQUEST, path, error);
+	}
+	
+	/**
 	 *  Invocado quando a aplicação não encontra um end point relativo a URL da request,
 	 * popula um {@link ErrorMessageResponse} para ser serializado como resposta para o usuário final.
 	 * 
@@ -103,22 +119,6 @@ public class ValidationErrorHandler {
 		return new ErrorMessageResponse(HttpStatus.METHOD_NOT_ALLOWED, path, error);
 	}
 	
-	
-	/**
-	 *  Invocado quando a implementação ativa do {@link HttpMessageConverter} não consegue ler o corpo da requisição enviada para algum end point da aplicação,
-	 * popula um {@link ErrorMessageResponse} para ser serializado como resposta para o usuário final.
-	 * 
-	 * @param request	representação da request da qual vai ser tirada o caminho que o usuário acessou;
-	 * @return {@link ErrorMessageResponse} populado com o erro 422 e URI da request para ser serializado como resposta.
-	 */
-	@ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ErrorMessageResponse handleUnprocessableEntity(WebRequest request) {
-		String errorMessage = messageSource.getMessage("UnprocessableEntity", null, "422 Unprocessable Entity", null);
-		String path = ((ServletWebRequest) request).getRequest().getRequestURI().toString();
-		ErrorMessageItem error = new ErrorMessageItem("request body", errorMessage);
-		return new ErrorMessageResponse(HttpStatus.UNPROCESSABLE_ENTITY, path, error);
-	}
 
 	/**
 	 *  Invocado quando qualquer exception não tratada / esperada for lançada,
