@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import br.com.zupacademy.mateus.Propostas.shared.validation.constraint.CpfCnpjFormat;
+
 /**
  * 
  * Classe modelo que representa os dados de uma proposta enviados em uma request de cadastro.
@@ -15,6 +17,7 @@ import javax.validation.constraints.Positive;
  */
 public class NovaPropostaRequest {
 
+	@NotBlank @CpfCnpjFormat
 	private String documento;
 	@Email
 	private String email;
