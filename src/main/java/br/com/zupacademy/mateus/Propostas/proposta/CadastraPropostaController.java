@@ -9,9 +9,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,21 +21,19 @@ import br.com.zupacademy.mateus.Propostas.shared.validation.response.ErrorMessag
 
 /**
  * 
- * Controller com os end-points relacionados ao CRUD da entidade Proposta.
+ * Controller com os end-points relacionados a persistência de novos registros da entidade Proposta.
  * 
  * @author Mateus Soares
  */
 @RestController
 @RequestMapping("/propostas")
-public class PropostaController {
+public class CadastraPropostaController {
 
 	private List<NewPropostaObserver> newPropostaObservers;
-
 	private PropostaRepository repository;
 
-	public PropostaController(@Autowired PropostaRepository repository,
-			@Autowired List<NewPropostaObserver> newPropostaObservers,
-			@Autowired PlatformTransactionManager manager) {
+	public CadastraPropostaController(@Autowired PropostaRepository repository,
+			@Autowired List<NewPropostaObserver> newPropostaObservers) {
 		this.repository = repository;
 		this.newPropostaObservers = newPropostaObservers;
 	}
@@ -61,23 +56,5 @@ public class PropostaController {
 		URI novaPropostaUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(proposta.getId()).toUri();
 		return ResponseEntity.created(novaPropostaUri).build();
-	}
-
-	/**
-	 * End-point de URL /propostas/{id} que procura por uma proposta e, caso
-	 * encontre, retorna ela no corpo da resposta.
-	 * 
-	 * @param id id da proposta a ser procurada;
-	 * @return ResponseEntity representando o status HTTP 200, 404 ou 500.
-	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<PropostaDetailsResponse> detalha(@PathVariable Long id) {
-		Optional<Proposta> propostaOptional = repository.findById(id);
-		ResponseEntity<PropostaDetailsResponse> response = propostaOptional.map(proposta -> {
-			return ResponseEntity.ok(new PropostaDetailsResponse(proposta));
-		}).orElseGet(() -> {
-			return ResponseEntity.notFound().build();
-		});
-		return response;
 	}
 }
