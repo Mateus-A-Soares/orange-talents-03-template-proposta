@@ -1,6 +1,34 @@
 version: '3'
 services:
 
+  proposta:
+    image: 'mateusasoares/proposta:latest'
+    ports: 
+      - '8080:8080'
+    networks:
+      - proposta_network
+    depends_on :
+      - database
+      - analise
+    environment:
+      PROPOSTA_ACTIVE_PROFILE: prod
+      PROPOSTA_DATABASE_URL: jdbc:postgresql://database:5432/proposta_db
+      PROPOSTA_DATABASE_USERNAME: postgres
+      PROPOSTA_DATABASE_PASSWORD: postgres132
+      ANALISEFINANCEIRA_URL: analise:9999
+
+  database:
+    image: 'postgres:alpine'
+    ports:
+      - 7658:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres132
+      POSTGRES_DB: proposta_db
+      POSTGRES_HOST: database
+    networks:
+      - proposta_network
+
   zookeeper:
     image: "confluentinc/cp-zookeeper:5.2.1"
     environment:
@@ -71,6 +99,8 @@ services:
       LOG_LEVEL: INFO
       URL_SISTEMA_CARTAO: http://contas:8888/api/cartoes
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    networks:
+      - proposta_network
 
   contas:
     image: 'zupacademy/contas'
@@ -133,6 +163,9 @@ services:
       VAULT_DEV_ROOT_TOKEN_ID: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
+      
+networks:
+  proposta_network:
 
 volumes:
   grafana-volume:
