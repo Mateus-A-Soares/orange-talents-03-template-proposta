@@ -3,12 +3,13 @@ package br.com.zupacademy.mateus.Propostas.proposta;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,8 @@ public class PropostaController {
 	private PropostaRepository repository;
 
 	public PropostaController(@Autowired PropostaRepository repository,
-			@Autowired List<NewPropostaObserver> newPropostaObservers) {
+			@Autowired List<NewPropostaObserver> newPropostaObservers,
+			@Autowired PlatformTransactionManager manager) {
 		this.repository = repository;
 		this.newPropostaObservers = newPropostaObservers;
 	}
@@ -49,14 +51,12 @@ public class PropostaController {
 	 * @return ResponseEntity representando o status HTTP 201, 400 ou 500.
 	 */
 	@PostMapping
-	@Transactional
 	public ResponseEntity<Void> cadastra(@RequestBody @Valid NovaPropostaRequest request) {
 		Proposta proposta = request.toModel();
 		Optional<Proposta> propostaMesmoDocumento = repository.findByDocumento(proposta.getDocumento());
 		if (propostaMesmoDocumento.isPresent())
 			throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY,
 					new ErrorMessageItem("documento", "documento já cadastrado"));
-		repository.save(proposta);
 		newPropostaObservers.forEach(observer -> observer.update(proposta));
 		URI novaPropostaUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(proposta.getId()).toUri();

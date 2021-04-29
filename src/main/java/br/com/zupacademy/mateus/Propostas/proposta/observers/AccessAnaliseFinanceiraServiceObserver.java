@@ -1,7 +1,8 @@
 package br.com.zupacademy.mateus.Propostas.proposta.observers;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -15,12 +16,12 @@ import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
 import feign.FeignException;
 
 /**
- * Observer que acessa o sistema de análise financeira para veriricar] a
+ * Observer que acessa o sistema de análise financeira para veriricar a
  * existência de restrições para o solicitante.
  * 
  * @author Mateus Soares
  */
-@Order(value = Ordered.LOWEST_PRECEDENCE)
+@Order(value = 1)
 @Component
 public class AccessAnaliseFinanceiraServiceObserver implements NewPropostaObserver {
 
@@ -30,6 +31,7 @@ public class AccessAnaliseFinanceiraServiceObserver implements NewPropostaObserv
 		this.client = client;
 	}
 
+	@Transactional
 	@Override
 	public void update(Proposta proposta) {
 		try {
