@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosClient;
+import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosRequest;
 import br.com.zupacademy.mateus.Propostas.shared.validation.ApiErrorException;
 import br.com.zupacademy.mateus.Propostas.shared.validation.response.ErrorMessageItem;
+import feign.FeignException;
 
 /**
  * 
@@ -30,9 +33,12 @@ import br.com.zupacademy.mateus.Propostas.shared.validation.response.ErrorMessag
 public class PropostaController {
 
 	private PropostaRepository repository;
+	
+	private DadosFinanceirosClient client;
 
-	public PropostaController(@Autowired PropostaRepository repository) {
+	public PropostaController(@Autowired PropostaRepository repository, @Autowired DadosFinanceirosClient client) {
 		this.repository = repository;
+		this.client = client;
 	}
 
 	/**
@@ -50,6 +56,11 @@ public class PropostaController {
 		if(propostaMesmoDocumento.isPresent())
 			throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorMessageItem("documento", "documento já cadastrado"));
 		repository.save(proposta);
+		try {
+			System.err.println(client.consulta(new DadosFinanceirosRequest(proposta)));
+		} catch (FeignException e) {
+			System.err.println(e.contentUTF8());
+		}
 		URI novaPropostaUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(proposta.getId()).toUri();
 		return ResponseEntity.created(novaPropostaUri).build();
