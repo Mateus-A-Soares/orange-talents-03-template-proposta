@@ -10,6 +10,7 @@ import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosClien
 import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosRequest;
 import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosSolicitacaoResponse;
 import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.ResultadoSolicitacao;
+import br.com.zupacademy.mateus.Propostas.proposta.EstadoProposta;
 import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
 import feign.FeignException;
 
@@ -36,9 +37,9 @@ public class AccessAnaliseFinanceiraServiceObserver implements NewPropostaObserv
 			DadosFinanceirosSolicitacaoResponse responseBody = client.consulta(requestBody);
 			Assert.isTrue(responseBody.getResultadoSolicitacao().equals(ResultadoSolicitacao.SEM_RESTRICAO),
 					"O resultado de uma request sucedida deveria ser SEM_RESTRICAO");
-			System.err.println(responseBody.toString());
-		} catch (FeignException e) {
-			e.printStackTrace();
+			proposta.setEstado(EstadoProposta.ELEGIVEL);
+		} catch (FeignException.UnprocessableEntity e) {
+			proposta.setEstado(EstadoProposta.NAO_ELEGIVEL);
 		}
 	}
 }

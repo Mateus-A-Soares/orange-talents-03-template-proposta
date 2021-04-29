@@ -14,6 +14,7 @@ public class PropostaDetailsResponse {
 	private String endereco;
 	private String nome;
 	private BigDecimal salario;
+	private EstadoProposta estado;
 
 	/**
 	 * Construtor que instância e popula um objeto {@link PropostaDetailsResponse} com os dados representativos de uma proposta a ser enviado pela aplicação.
@@ -26,6 +27,7 @@ public class PropostaDetailsResponse {
 		endereco = proposta.getEndereco();
 		nome = proposta.getNome();
 		salario = proposta.getSalario();
+		estado = proposta.getEstado();
 	}
 
 	public String getDocumento() {
@@ -46,5 +48,9 @@ public class PropostaDetailsResponse {
 
 	public BigDecimal getSalario() {
 		return salario;
+	}
+	
+	public EstadoProposta getEstado() {
+		return estado;
 	}
 }
