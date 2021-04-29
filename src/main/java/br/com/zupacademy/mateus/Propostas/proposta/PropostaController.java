@@ -1,6 +1,7 @@
 package br.com.zupacademy.mateus.Propostas.proposta;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -16,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosClient;
-import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosRequest;
+import br.com.zupacademy.mateus.Propostas.proposta.observers.NewPropostaObserver;
 import br.com.zupacademy.mateus.Propostas.shared.validation.ApiErrorException;
 import br.com.zupacademy.mateus.Propostas.shared.validation.response.ErrorMessageItem;
-import feign.FeignException;
 
 /**
  * 
@@ -32,13 +31,14 @@ import feign.FeignException;
 @RequestMapping("/propostas")
 public class PropostaController {
 
-	private PropostaRepository repository;
-	
-	private DadosFinanceirosClient client;
+	private List<NewPropostaObserver> newPropostaObservers;
 
-	public PropostaController(@Autowired PropostaRepository repository, @Autowired DadosFinanceirosClient client) {
+	private PropostaRepository repository;
+
+	public PropostaController(@Autowired PropostaRepository repository,
+			@Autowired List<NewPropostaObserver> newPropostaObservers) {
 		this.repository = repository;
-		this.client = client;
+		this.newPropostaObservers = newPropostaObservers;
 	}
 
 	/**
@@ -53,14 +53,11 @@ public class PropostaController {
 	public ResponseEntity<Void> cadastra(@RequestBody @Valid NovaPropostaRequest request) {
 		Proposta proposta = request.toModel();
 		Optional<Proposta> propostaMesmoDocumento = repository.findByDocumento(proposta.getDocumento());
-		if(propostaMesmoDocumento.isPresent())
-			throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorMessageItem("documento", "documento já cadastrado"));
+		if (propostaMesmoDocumento.isPresent())
+			throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY,
+					new ErrorMessageItem("documento", "documento já cadastrado"));
 		repository.save(proposta);
-		try {
-			System.err.println(client.consulta(new DadosFinanceirosRequest(proposta)));
-		} catch (FeignException e) {
-			System.err.println(e.contentUTF8());
-		}
+		newPropostaObservers.forEach(observer -> observer.update(proposta));
 		URI novaPropostaUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(proposta.getId()).toUri();
 		return ResponseEntity.created(novaPropostaUri).build();
@@ -77,10 +74,10 @@ public class PropostaController {
 	public ResponseEntity<PropostaDetailsResponse> detalha(@PathVariable Long id) {
 		Optional<Proposta> propostaOptional = repository.findById(id);
 		ResponseEntity<PropostaDetailsResponse> response = propostaOptional.map(proposta -> {
-																return ResponseEntity.ok(new PropostaDetailsResponse(proposta));
-															}).orElseGet(() -> {
-																return ResponseEntity.notFound().build();
-															});
+			return ResponseEntity.ok(new PropostaDetailsResponse(proposta));
+		}).orElseGet(() -> {
+			return ResponseEntity.notFound().build();
+		});
 		return response;
 	}
 }

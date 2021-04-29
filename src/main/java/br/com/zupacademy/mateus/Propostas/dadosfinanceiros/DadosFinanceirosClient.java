@@ -20,5 +20,5 @@ public interface DadosFinanceirosClient {
 	 * @return string representando a resposta do serviço.
 	 */
 	@PostMapping("/api/solicitacao")
-	public String consulta(@RequestBody DadosFinanceirosRequest request);
+	public DadosFinanceirosSolicitacaoResponse consulta(@RequestBody DadosFinanceirosRequest request);
 }
