@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * 
  * @author Mateus Soares
  */
-@FeignClient(url = "${analisefinanceira.service.url}", name = "analisefinanceira")
+@FeignClient(url = "${analisefinanceira.service.url}", name = "${analisefinanceira.service.name}")
 public interface DadosFinanceirosClient {
 	
 	/**
