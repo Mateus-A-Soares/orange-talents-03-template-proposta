@@ -1,18 +1,18 @@
-package br.com.zupacademy.mateus.Propostas.dadosfinanceiros;
+package br.com.zupacademy.mateus.Propostas.analisefinanceira;
 
 /**
  * Classe representativa do corpo da resposta na rota de solicitação na API de análise financeira
  *
  * @author Mateus Soares
  */
-public class DadosFinanceirosSolicitacaoResponse {
+public class SolicitacaoDadosFinanceirosResponse {
 
 	private String idProposta;
 	private String documento;
 	private String nome;
 	private ResultadoSolicitacao resultadoSolicitacao;
 	
-	public DadosFinanceirosSolicitacaoResponse(String idProposta, String documento, String nome,
+	public SolicitacaoDadosFinanceirosResponse(String idProposta, String documento, String nome,
 			ResultadoSolicitacao resultadoSolicitacao) {
 		this.idProposta = idProposta;
 		this.documento = documento;

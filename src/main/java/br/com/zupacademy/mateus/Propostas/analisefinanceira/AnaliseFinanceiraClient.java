@@ -1,4 +1,4 @@
-package br.com.zupacademy.mateus.Propostas.dadosfinanceiros;
+package br.com.zupacademy.mateus.Propostas.analisefinanceira;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Mateus Soares
  */
 @FeignClient(url = "${analisefinanceira.service.url}", name = "${analisefinanceira.service.name}")
-public interface DadosFinanceirosClient {
+public interface AnaliseFinanceiraClient {
 	
 	/**
 	 *  Executa uma chamada na rota /api/solicitacao do serviço de análise financeira,
@@ -22,7 +22,7 @@ public interface DadosFinanceirosClient {
 	 * @return string representando a resposta do serviço.
 	 */
 	@PostMapping("/api/solicitacao")
-	public DadosFinanceirosSolicitacaoResponse consulta(@RequestBody DadosFinanceirosRequest request);
+	public SolicitacaoDadosFinanceirosResponse consulta(@RequestBody SolicitacaoDadosFinanceirosRequest request);
 	
 	@GetMapping
 	public ResponseEntity<Void> ping(); 

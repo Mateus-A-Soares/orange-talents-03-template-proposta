@@ -1,4 +1,4 @@
-package br.com.zupacademy.mateus.Propostas.dadosfinanceiros;
+package br.com.zupacademy.mateus.Propostas.analisefinanceira;
 
 import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
 
@@ -7,19 +7,19 @@ import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
  * 
  * @author Mateus Soares
  */
-public class DadosFinanceirosRequest {
+public class SolicitacaoDadosFinanceirosRequest {
 
 	private String documento;
 	private String nome;
 	private String idProposta;
 
 	/**
-	 *  Construtor que instância um objeto {@link DadosFinanceirosRequest} populando
+	 *  Construtor que instância um objeto {@link SolicitacaoDadosFinanceirosRequest} populando
 	 * com os dados da proposta passada.
 	 * 
 	 * @param proposta proposta encapsulando os dados a serem utilizados no corpo da requisição.s
 	 */
-	public DadosFinanceirosRequest(Proposta proposta) {
+	public SolicitacaoDadosFinanceirosRequest(Proposta proposta) {
 		documento = proposta.getDocumento();
 		nome = proposta.getNome();
 		idProposta = proposta.getId().toString();

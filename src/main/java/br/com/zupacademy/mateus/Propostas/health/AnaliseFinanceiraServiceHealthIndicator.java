@@ -5,7 +5,7 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
-import br.com.zupacademy.mateus.Propostas.dadosfinanceiros.DadosFinanceirosClient;
+import br.com.zupacademy.mateus.Propostas.analisefinanceira.AnaliseFinanceiraClient;
 import feign.FeignException;
 
 /**
@@ -16,9 +16,9 @@ import feign.FeignException;
 @Component
 public class AnaliseFinanceiraServiceHealthIndicator implements HealthIndicator {
 
-	private DadosFinanceirosClient client;
+	private AnaliseFinanceiraClient client;
 
-	public AnaliseFinanceiraServiceHealthIndicator(@Autowired DadosFinanceirosClient client) {
+	public AnaliseFinanceiraServiceHealthIndicator(@Autowired AnaliseFinanceiraClient client) {
 		this.client = client;
 	}
 
