@@ -1,11 +1,20 @@
 package br.com.zupacademy.mateus.Propostas.cartao;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.zupacademy.mateus.Propostas.cartao.renegociacao.RenegociacaoClientResponse;
 import br.com.zupacademy.mateus.Propostas.cartao.vencimento.VencimentoClientResponse;
+import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
 
 /**
  *  Classe representativa do corpo da resposta na rota de solicitação
@@ -15,13 +24,20 @@ import br.com.zupacademy.mateus.Propostas.cartao.vencimento.VencimentoClientResp
  */
 public class CartaoClientResponse {
 
+	@NotBlank
 	private String id;
+	@NotNull @Positive
 	private Long idProposta;
 	@JsonProperty("emitidoEm")
+	@NotNull @PastOrPresent
 	private LocalDateTime dataEmissao;
+	@NotBlank
 	private String titular; 
-	private Long limite;
+	@NotNull @PositiveOrZero
+	private BigDecimal limite;
+	@Valid
 	private RenegociacaoClientResponse renegociacao;
+	@Valid @NotNull
 	private VencimentoClientResponse vencimento;
 	
 	/**
@@ -32,19 +48,19 @@ public class CartaoClientResponse {
 	 * @param id			id do cartão, deve ser único;
 	 * @param idProposta	id da proposta qual o cartão pertence, deve existir e não ter cartão atrelado;
 	 * @param dataEmissao	data de emissão do cartão, deve ser uma data válida e no passado;
-	 * @param titular		titular do cartão, deve ser um documento válido;
+	 * @param titular		nome do titular do cartão, não pode estar vazio;
 	 * @param limite		limite do cartão, deve ser um valor não negativo;
 	 * @param renegociacao	renegociacao, representação de uma renegociação caso exista; 
-	 * @param vencimento	vencimento do cartão, representa a data de vencimento do cartão. 
+	 * @param vencimento	vencimento do cartão, representa a data de vencimento do cartão, não pode estar vazio. 
 	 */
-	public CartaoClientResponse(String id, Long idProposta, LocalDateTime dataEmissao, String titular, Long limite,
-			RenegociacaoClientResponse renegociacao, VencimentoClientResponse vencimento) {
+	public CartaoClientResponse(@NotBlank String id, @NotNull @Positive Long idProposta,
+			@NotNull @PastOrPresent LocalDateTime dataEmissao, @NotBlank String titular,
+			@NotNull @PositiveOrZero BigDecimal limite, @Valid VencimentoClientResponse vencimento) {
 		this.id = id;
 		this.idProposta = idProposta;
 		this.dataEmissao = dataEmissao;
 		this.titular = titular;
 		this.limite = limite;
-		this.renegociacao = renegociacao;
 		this.vencimento = vencimento;
 	}
 	
@@ -52,10 +68,14 @@ public class CartaoClientResponse {
 		return id;
 	}
 
-	@Override
-	public String toString() {
-		return "CartaoResponse [id=" + id + ", idProposta=" + idProposta + ", dataEmissao=" + dataEmissao + ", titular="
-				+ titular + ", limite=" + limite + ", renegociacao=" + renegociacao + ", vencimento=" + vencimento
-				+ "]";
+	public Long getIdProposta() {
+		return idProposta;
+	}
+
+	public Cartao toModel(Proposta proposta) {
+		Cartao cartao = new Cartao(id, proposta, dataEmissao, titular, limite, vencimento.toModel()); 
+		if(renegociacao != null)
+			cartao.setRenegociacao(renegociacao.toModel());
+		return cartao;
 	}
 }
