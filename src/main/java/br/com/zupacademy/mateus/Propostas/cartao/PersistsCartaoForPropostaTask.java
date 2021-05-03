@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import feign.FeignException;
+
 import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
 import br.com.zupacademy.mateus.Propostas.proposta.PropostaRepository;
 
@@ -40,9 +42,14 @@ class PersistsCartaoForPropostaTask {
 	private void execute() {
 		Iterable<Proposta> propostas = propostaRepository.findAll();
 		propostas.forEach(proposta -> {
-			log.debug("Consultando cartão para proposta {}", proposta.getId());
-			String clientResponse = client.cartaoParaProposta(proposta.getId().toString());
-			log.debug("Sucesso, cartão encontrado para proposta {} : {}", proposta.getId(), clientResponse);
+			try {
+				log.debug("Consultando cartão para proposta {}", proposta.getId());
+				CartaoClientResponse cartao = client.cartaoParaProposta(proposta.getId().toString());
+				log.debug("Sucesso, cartão {} encontrado para proposta {}", cartao.getId(), proposta.getId());
+			} catch (FeignException exception) {
+				log.debug("Falha no processo de geração de cartão para a proposta {}, mensagem = {}", proposta.getId(),
+						 exception.getMessage());
+			}
 		});
 	}
 }
