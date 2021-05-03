@@ -2,6 +2,7 @@ package br.com.zupacademy.mateus.Propostas.proposta;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,11 +10,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import br.com.zupacademy.mateus.Propostas.cartao.Cartao;
 import br.com.zupacademy.mateus.Propostas.shared.validation.constraint.CpfCnpjFormat;
 
 /**
@@ -50,7 +54,10 @@ public class Proposta {
 
     @Enumerated(EnumType.STRING)
 	private EstadoProposta estado;
-	
+    
+    @OneToOne(cascade = CascadeType.MERGE) @JoinColumn(name = "cartao_id", referencedColumnName = "id")
+    private Cartao cartao; 
+    
 	@Deprecated
 	public Proposta() {
 	}
@@ -100,7 +107,15 @@ public class Proposta {
 	public EstadoProposta getEstado() {
 		return estado;
 	}
-	
+
+	public Cartao getCartao() {
+		return cartao;
+	}
+
+	public void setCartao(@NotNull Cartao cartao) {
+		this.cartao = cartao;
+	}
+
 	public void setEstado(@NotNull EstadoProposta estado) {
 		this.estado = estado;
 	}

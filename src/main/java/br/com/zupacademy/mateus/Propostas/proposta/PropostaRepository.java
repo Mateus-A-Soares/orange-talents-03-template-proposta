@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface PropostaRepository extends CrudRepository<Proposta, Long>{
 
 	Optional<Proposta> findByDocumento(String documento);
+
+	Iterable<Proposta> findByCartaoIsNull();
 }
