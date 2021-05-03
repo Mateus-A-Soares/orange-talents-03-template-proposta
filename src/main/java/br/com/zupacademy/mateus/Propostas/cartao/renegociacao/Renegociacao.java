@@ -13,6 +13,12 @@ import javax.validation.constraints.PositiveOrZero;
 
 import br.com.zupacademy.mateus.Propostas.cartao.Cartao;
 
+/**
+ * 
+ * Classe modelo que representa os dados da entidade renegociação.
+ * 
+ * @author Mateus Soares
+ */
 @Entity
 public class Renegociacao {
 
@@ -39,6 +45,14 @@ public class Renegociacao {
 	public Renegociacao() {
 	}
 
+	/**
+	 * Construtor que instância e popula um objeto {@link Renegociacao} com os dados representativos da entidade renegociação.
+	 * 
+	 * @param id			id da renegociação gerado pelo serviço de accounts, deve ser único;
+	 * @param quantidade	
+	 * @param valor			valor da renegociação, deve se um valor não negativo;
+	 * @param dataDeCriacao	data do cadastro da renegociação, deve ser uma data válida e não pode ser futura.
+	 */
 	public Renegociacao(String id, Integer quantidade, BigDecimal valor, LocalDateTime dataDeCriacao) {
 		this.id = id;
 		this.quantidade = quantidade;

@@ -8,6 +8,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PastOrPresent;
 
+/**
+ * 
+ * Classe modelo que representa os campos embutidos relativos ao vencimento da entidade cartão.
+ * 
+ * @author Mateus Soares
+ */
 @Embeddable
 public class EmbebbedVencimento {
 	
@@ -19,9 +25,16 @@ public class EmbebbedVencimento {
 	@PastOrPresent
 	private LocalDateTime dataDeCriacao;
 
+	@Deprecated
 	public EmbebbedVencimento() {
 	}
 	
+	/**
+	 * Construtor que instância e popula um objeto {@link EmbebbedVencimento} com os campos embutidos relativos ao vencimento da entidade cartão.
+	 * 
+	 * @param dia			dia do vencimento do cartão, deve ser um número entre 1 e 31;
+	 * @param dataDeCriacao	data de criação do vencimento, deve ser uma data válida e não pode estar no futuro. 
+	 */
 	public EmbebbedVencimento(@Min(1) @Max(31) Integer dia, @PastOrPresent LocalDateTime dataDeCriacao) {
 		this.dia = dia;
 		this.dataDeCriacao = dataDeCriacao;

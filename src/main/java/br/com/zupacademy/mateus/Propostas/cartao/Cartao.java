@@ -18,6 +18,12 @@ import br.com.zupacademy.mateus.Propostas.cartao.renegociacao.Renegociacao;
 import br.com.zupacademy.mateus.Propostas.cartao.vencimento.EmbebbedVencimento;
 import br.com.zupacademy.mateus.Propostas.proposta.Proposta;
 
+/**
+ * 
+ * Classe modelo que representa os dados da entidade cartão.
+ * 
+ * @author Mateus Soares
+ */
 @Entity
 public class Cartao {
 
@@ -52,6 +58,16 @@ public class Cartao {
 	public Cartao() {
 	}
 
+	/**
+	 * Construtor que instância e popula um objeto {@link Cartao} com os dados representativos da entidade cartão.
+	 * 
+	 * @param id			id do cartão gerado pelo serviço de accounts, deve ser único;
+	 * @param proposta		proposta pertencente ao cartão, obrigatória;
+	 * @param dataEmissao	data em que o cartão foi emitido, obrigatória e não pode estar no futuro;
+	 * @param titular		nome do titular do cartão, obrigatório;
+	 * @param limite		limite do cartão, não pode ser um número negativo;
+	 * @param vencimento	objeto que representa os dados de vencimento, embute os campos dia e data de criação.
+	 */
 	public Cartao(@NotBlank String id, @NotNull Proposta proposta, @NotNull @PastOrPresent LocalDateTime dataEmissao,
 			@NotBlank String titular, @NotNull @PositiveOrZero BigDecimal limite,
 			@NotNull EmbebbedVencimento vencimento) {
@@ -91,6 +107,11 @@ public class Cartao {
 		return vencimento;
 	}
 	
+	/**
+	 * Adiciona uma renegociação para o registro.
+	 * 
+	 * @param renegociacao objeto representando o registro de renegociação a ser linkado.
+	 */
 	public void setRenegociacao(Renegociacao renegociacao) {
 		this.renegociacao = renegociacao;
 	}

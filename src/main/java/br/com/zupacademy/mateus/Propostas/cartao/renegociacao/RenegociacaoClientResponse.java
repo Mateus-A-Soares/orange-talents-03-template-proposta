@@ -32,7 +32,7 @@ public class RenegociacaoClientResponse {
 	 * 
 	 * @param id			id da renegociação, deve ser único;
 	 * @param quantidade		
-	 * @param valor			valor da renegociação, deve se um valor positivo;
+	 * @param valor			valor da renegociação, deve se um valor não negativo;
 	 * @param dataDeCriacao	data do cadastro da renegocicação, deve ser uma data válida e no passado.
 	 */
 	public RenegociacaoClientResponse(@NotBlank String id, @NotNull @PositiveOrZero Integer quantidade,
