@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.zupacademy.mateus</groupId>
 	<artifactId>Propostas</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.5</version>
 	<name>Propostas</name>
 	<description>Implementando o desafio de propostas</description>
 	<properties>

@@ -2,6 +2,9 @@ package br.com.zupacademy.mateus.Propostas.proposta;
 
 import java.math.BigDecimal;
 
+import br.com.zupacademy.mateus.Propostas.cartao.Cartao;
+import br.com.zupacademy.mateus.Propostas.cartao.CartaoDetailsResponse;
+
 /**
  * Classe que representa os dados das propostas a serem serializados e enviados pela aplicação
  * 
@@ -15,6 +18,7 @@ public class PropostaDetailsResponse {
 	private String nome;
 	private BigDecimal salario;
 	private EstadoProposta estado;
+	private CartaoDetailsResponse cartao;
 
 	/**
 	 * Construtor que instância e popula um objeto {@link PropostaDetailsResponse} com os dados representativos de uma proposta a ser enviado pela aplicação.
@@ -28,6 +32,9 @@ public class PropostaDetailsResponse {
 		nome = proposta.getNome();
 		salario = proposta.getSalario();
 		estado = proposta.getEstado();
+		Cartao propostaCartao = proposta.getCartao();
+		if(propostaCartao != null)
+			cartao = new CartaoDetailsResponse(propostaCartao);
 	}
 
 	public String getDocumento() {
@@ -52,5 +59,9 @@ public class PropostaDetailsResponse {
 	
 	public EstadoProposta getEstado() {
 		return estado;
+	}
+	
+	public CartaoDetailsResponse getCartao() {
+		return cartao;
 	}
 }
